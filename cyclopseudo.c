@@ -129,8 +129,7 @@ int main(int argc, char **argv)
 			}
 
 			is_pseudo=0;
-/*			ret = cpseudo_fibo_all(&is_pseudo, N, l);
-*/			ret = cpseudo_fibo(&is_pseudo, N, l);
+			ret = cpseudo_fibo(&is_pseudo, N, l, 0);
 			if ( ret ) {
 				printf("Unexpected error.\n");
 				return -1;

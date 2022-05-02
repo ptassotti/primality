@@ -117,7 +117,7 @@ unsigned int cpseudo_ramifies(mpz_t N, unsigned int l)
  *                    U_{N^2(l-1)-1} == 0 (mod N)
  *
  */
-int cpseudo_fibo(unsigned int *result, mpz_t N, unsigned int l)
+int cpseudo_fibo(unsigned int *result, mpz_t N, unsigned int l, unsigned int verbose)
 {
 	/* sanity check */
 	if (!result || !N) return -1;
@@ -143,6 +143,10 @@ int cpseudo_fibo(unsigned int *result, mpz_t N, unsigned int l)
 	unsigned int exp, f;
 
 	f = smallest_exp(N, l);
+	if ( verbose ) {
+		printf("f = %d.\n", f);
+	}
+
 	exp = 2 * f;
 
 	mpz_t N_exp;
@@ -194,7 +198,7 @@ int cpseudo_test()
 	mpz_init(N);
 	mpz_set_ui(N, 11);
 
-	cpseudo_fibo(&result, N, l);
+	cpseudo_fibo(&result, N, l, 0);
 
 	mpz_clear(N);
 

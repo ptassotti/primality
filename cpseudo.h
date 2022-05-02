@@ -30,7 +30,7 @@ extern struct divisors_list phi_divisors[MAXPRIMEINDEX];
 
 
 /* Functions Declarations */
-int cpseudo_fibo    (unsigned int *, mpz_t, unsigned int);
+int cpseudo_fibo    (unsigned int *, mpz_t, unsigned int, unsigned int);
 
 unsigned int smallest_exp(mpz_t, unsigned int);
 unsigned int cpseudo_ramifies(mpz_t, unsigned int);

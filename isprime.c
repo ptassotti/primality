@@ -59,7 +59,7 @@ int is_prime(mpz_t N, unsigned int verbose)
 			gmp_printf("Probing %d\n", l);
 		}
 
-		ret = cpseudo_fibo(&is_pseudo, N, l);
+		ret = cpseudo_fibo(&is_pseudo, N, l, verbose);
 		if ( ret ) {
 			printf("Unexpected error.\n");
 			return -1;
