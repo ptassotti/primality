@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gmp.h>
+#include "isprime.h"
 
 
 /* Constants */
@@ -33,7 +34,6 @@
 #define MAXVALUE 1000000
 
 
-int is_prime(mpz_t);
 
 /* Utility Functions */
 static void usage(const char *message)
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 
 	do {
 
-		if (is_prime(N)) {
+		if (is_prime(N, 0)) {
 			gmp_printf("%Zd\n", N);
 			fflush(stdout);
 		}

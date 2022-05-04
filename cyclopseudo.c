@@ -122,6 +122,9 @@ int main(int argc, char **argv)
 	printf("Starting from %d (milestone at every %d, next milestone %d).\n",
 			min, offset, milestone);
 
+	/* if min is even skip to odd */
+	if ( (min % 2) == 0) min++;
+
 	for (i = min; /* infinite loop */ ; i=i+2) {
 
 		if (i > milestone) {
