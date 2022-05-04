@@ -1,10 +1,31 @@
 /*
+ * Copyright 2022 Paolo Tassotti
+ *
+ * This file is part of Primality.
+ *
+ * Primality is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version
+ * 3 of the License, or (at your option) any later version.
+ *
+ * Primality is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with Primality.
+ * If not, see <https://www.gnu.org/licenses/>.
+ */
+
+
+/*
  * cyclo.c
  */
 
 /* Includes */
 #include <stdio.h>
 #include "cyclo.h"
+#include "flint/fmpz.h"
+#include "flint/fmpz_poly.h"
+
 
 /* public functions */
 
@@ -158,7 +179,7 @@ int cyclo_mult(
 	if (!result || !n1 || !n2 || !N) return -1;
 
 	/* ASSERT: n1->size == n2->size == result->size, checked by the caller */
-	unsigned int i, j, size;
+	unsigned int i, size;
 	size = n1->size;
 
 	/* initialize local variables */
@@ -166,15 +187,44 @@ int cyclo_mult(
 
 	if ( ret ) { return -1; }
 
+	fmpz_poly_t n1_poly, n2_poly, r_poly;
+
+	/* allocate polynomials */
+	fmpz_poly_init2(n1_poly, size);
+	fmpz_poly_init2(n2_poly, size);
+	fmpz_poly_init2(r_poly,  size * 2);
+
+	/* convert n1 and n2 into nmod_poly_t */
+	fmpz_t ftmp;
+	fmpz_init(ftmp);
 	for (i = 0; i < size; i++) {
 
-		for (j = 0; j < size; j++) {
-			unsigned int coord=(i+j) % size;
+		fmpz_set_mpz(ftmp, n1->values[i]);
+		fmpz_poly_set_coeff_fmpz(n1_poly, i, ftmp);
 
-			mpz_addmul(r.values[coord], n1->values[i], n2->values[j]);
-			mpz_mod(r.values[coord], r.values[coord], N);
-		}
+		fmpz_set_mpz(ftmp, n2->values[i]);
+		fmpz_poly_set_coeff_fmpz(n2_poly, i, ftmp);
 	}
+
+	/* multiply n1_poly and n2_poly */
+	fmpz_poly_mul(r_poly, n1_poly, n2_poly);
+
+	/* convert back r_poly into a cyclotomic integer (collapse equivalent powers) */
+	mpz_t tmp;
+	mpz_init(tmp);
+	for (i = 0; i < 2*size; i++) {
+
+		fmpz_poly_get_coeff_fmpz(ftmp, r_poly, i);
+		fmpz_get_mpz(tmp, ftmp);
+		mpz_add(r.values[i%size], r.values[i%size], tmp);
+	}
+
+	/* free mem */
+	fmpz_poly_clear(n1_poly);
+	fmpz_poly_clear(n2_poly);
+	fmpz_poly_clear(r_poly);
+	fmpz_clear(ftmp);
+	mpz_clear(tmp);
 
 	/* copy result */
 	cyclo_copy(result, &r);

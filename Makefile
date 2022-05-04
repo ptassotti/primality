@@ -1,5 +1,5 @@
-CFLAGS=-Wall -D MODE=NORMAL -D STACK_STATIC -O3
-LDFLAGS=-lgmp
+CFLAGS=-Wall -D MODE=NORMAL -D STACK_STATIC -O3 -I/usr/lib
+LDFLAGS=-lgmp -lflint
 
 
 OBJS=cyclo.o cmatrix.o cpseudo.o smallprimes.o discriminant.o
